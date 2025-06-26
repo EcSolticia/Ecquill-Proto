@@ -37,13 +37,16 @@ fn classify_lines(lines: std::str::Split<'_, char>, line_tokens: &mut Vec<Line>)
     }
 }
 
-fn test_basic_types(line_tokens: &mut Vec<Line>) {
+fn to_html(line_tokens: &mut Vec<Line>, output: &mut String) {
     for line in line_tokens {
 
         match line.line_type {
-            LineType::H1 => println!("{}", line.text.to_uppercase()),
-            LineType::P => println!("{}", line.text.to_lowercase()),
-            _ => println!("[Not yet implemented :p]")
+
+            LineType::H1 => output.push_str(format!("<h1>{}</h1>", line.text.as_str()[1..].to_string()).as_str()),
+            LineType::H2 => output.push_str(format!("<h2>{}</h2>", line.text.as_str()[2..].to_string()).as_str()),//noimpl
+            LineType::H3 => output.push_str(format!("<h3>{}</h3>", line.text.as_str()[3..].to_string()).as_str()),//noimpl
+            LineType::P => output.push_str(format!("<p>{}</p>", line.text).as_str())
+
         }
 
     }
@@ -58,6 +61,10 @@ fn main() {
 
     classify_lines(lines, &mut line_tokens);
 
-    test_basic_types(&mut line_tokens);
+    let mut output: String = "".to_string();
+
+    to_html(&mut line_tokens, &mut output);;
+
+    println!("{}", output);
 
 }
