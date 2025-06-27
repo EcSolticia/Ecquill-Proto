@@ -1,4 +1,4 @@
-use crate::io;
+use crate::{io, tokens};
 
 pub enum LineType {
     H,
@@ -8,7 +8,8 @@ pub enum LineType {
 
 pub struct Line {
     pub ltype: LineType,
-    pub ltext: String
+    pub ltext: String,
+    pub ltokens: tokens::ClassifiedTokens
 }
 
 pub struct ClassifiedLines {
@@ -44,7 +45,8 @@ pub fn classify_lines(input: &io::Input, classified_lines: &mut ClassifiedLines)
             LineType::NOTHING => continue,
             _ => classified_lines.lines.push(Line{
                 ltype: line_type,
-                ltext: line_text.to_string()
+                ltext: line_text.to_string(),
+                ltokens: tokens::ClassifiedTokens::get_dummy()
             })
         }
 

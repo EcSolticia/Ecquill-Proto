@@ -1,5 +1,6 @@
 mod io;
 mod lines;
+mod tokens;
 
 fn main() {
     let input: io::Input = io::Input{
@@ -12,6 +13,8 @@ fn main() {
 
     lines::classify_lines(&input, &mut classified_lines);
 
+    tokens::classify_tokens_for_classified_lines(&mut classified_lines);
+    
     for line in classified_lines.lines {
 
         match line.ltype {
@@ -20,5 +23,5 @@ fn main() {
             lines::LineType::NOTHING => continue
         }
 
-    } 
+    }
 }

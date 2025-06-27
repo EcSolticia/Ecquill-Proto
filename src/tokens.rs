@@ -1,0 +1,41 @@
+use crate::lines;
+
+pub enum TokenType {
+    REGULAR,
+    BOLD,
+    ITALIC,
+    HYPERLINK
+}
+
+pub struct Token {
+    ttype: TokenType,
+    ttext: String
+}
+
+pub struct ClassifiedTokens {
+    tokens: Vec<Token>
+}
+impl ClassifiedTokens {
+    pub fn get_dummy() -> ClassifiedTokens {
+        return ClassifiedTokens{
+            tokens: vec![]
+        }
+    }
+}
+
+pub fn classify_tokens(classified_line: &mut lines::Line) {
+    let mut text_tokens = classified_line.ltext.split_whitespace();
+
+    for text_token in text_tokens {
+        classified_line.ltokens.tokens.push(Token{
+            ttype: TokenType::REGULAR,
+            ttext: text_token.to_string()
+        })
+    }
+}
+
+pub fn classify_tokens_for_classified_lines(classified_lines: &mut lines::ClassifiedLines) {
+    for classified_line in &mut classified_lines.lines {
+        classify_tokens(classified_line);
+    }
+}
