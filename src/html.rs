@@ -33,8 +33,16 @@ fn strip_tokenwise_pmarkdown_formatting(token: &tokens::Token) -> String {
 
 fn strip_linewise_pmarkdown_formatting(line: &lines::Line) -> String {
     match line.ltype {
-        lines::LineType::H => return format!("<h1>{}</h1>", line.ltext),
-        lines::LineType::P => return format!("<p>{}</p>", line.ltext),
+        lines::LineType::H => {
+            let re = Regex::new(r"#(.*)").unwrap();
+            let innerhtml: String = re.captures(&line.ltext).unwrap()[1].to_string();
+            return format!("<h1>{}</h1>", innerhtml);
+        },
+        lines::LineType::P => {
+            let re = Regex::new(r"(.*)").unwrap();
+            let innerhtml: String = re.captures(&line.ltext).unwrap()[1].to_string();
+            return format!("<p>{}</p>", innerhtml);
+        }
         lines::LineType::NOTHING => return "".to_string()
     }
 }
@@ -60,7 +68,7 @@ pub fn produce_html(
     classified_lines_with_classified_tokens: &mut lines::ClassifiedLines,
     actual_html: &mut ActualHTML
 ) {
-    actual_html.html.push_str("<html><body>");
+    actual_html.html.push_str("<html><body>\n");
     for line in &mut classified_lines_with_classified_tokens.lines {
 
         line.ltext = "".to_string();
@@ -71,7 +79,8 @@ pub fn produce_html(
             )
         }
 
-        actual_html.html.push_str(&strip_linewise_pmarkdown_formatting(line));
+        let new_line: String = format!("{}\n", strip_linewise_pmarkdown_formatting(line));
+        actual_html.html.push_str(&new_line);
 
     }
     actual_html.html.push_str("</html></body>");

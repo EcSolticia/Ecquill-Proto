@@ -5,7 +5,7 @@ mod html;
 
 fn main() {
     let input: input::Input = input::Input{
-        pmarkdown: "# Hi, this is me, okay?\nOk **haha**\n# Bye".to_string()
+        pmarkdown: "# Hi, this is me, okay?\nOk **haha**, *usain* **bolt** or *italic* **bold**?\n sorry, bad joke\n# Bye".to_string()
     };
 
     let mut classified_lines: lines::ClassifiedLines = lines::ClassifiedLines::get_dummy();
