@@ -1,13 +1,12 @@
 mod io;
 mod lines;
 mod tokens;
+mod html;
 
 fn main() {
     let input: io::Input = io::Input{
-        pmarkdown: "# Hi\nOk\n# Bye".to_string()
+        pmarkdown: "# Hi, this is **me**, okay?\nOk\n# Bye".to_string()
     };
-
-    //let mut output: io::Output;
 
     let mut classified_lines: lines::ClassifiedLines = lines::ClassifiedLines::get_dummy();
 
@@ -15,13 +14,9 @@ fn main() {
 
     tokens::classify_tokens_for_classified_lines(&mut classified_lines);
     
-    for line in classified_lines.lines {
+    let mut actual_html: html::ActualHTML = html::ActualHTML::get_dummy();
 
-        match line.ltype {
-            lines::LineType::H => println!("{}", line.ltext.to_uppercase()),
-            lines::LineType::P => println!("{}", line.ltext.to_lowercase()),
-            lines::LineType::NOTHING => continue
-        }
+    html::produce_html(&classified_lines, &mut actual_html);
 
-    }
+    println!("{}", actual_html.html);
 }

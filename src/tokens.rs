@@ -9,12 +9,12 @@ pub enum TokenType {
 }
 
 pub struct Token {
-    ttype: TokenType,
-    ttext: String
+    pub ttype: TokenType,
+    pub ttext: String
 }
 
 pub struct ClassifiedTokens {
-    tokens: Vec<Token>
+    pub tokens: Vec<Token>
 }
 impl ClassifiedTokens {
     pub fn get_dummy() -> ClassifiedTokens {
