@@ -1,4 +1,4 @@
-use crate::{io, tokens};
+use crate::{input, tokens};
 
 pub enum LineType {
     H,
@@ -34,7 +34,7 @@ fn classify_line(line_text: &str) -> LineType {
     }
 }
 
-pub fn classify_lines(input: &io::Input, classified_lines: &mut ClassifiedLines) {
+pub fn classify_lines(input: &input::Input, classified_lines: &mut ClassifiedLines) {
     let lines: std::str::Split<'_, char> = input.pmarkdown.split('\n');
 
     for line_text in lines {

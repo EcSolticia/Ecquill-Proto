@@ -1,10 +1,10 @@
-mod io;
+mod input;
 mod lines;
 mod tokens;
 mod html;
 
 fn main() {
-    let input: io::Input = io::Input{
+    let input: input::Input = input::Input{
         pmarkdown: "# Hi, this is **me**, okay?\nOk\n# Bye".to_string()
     };
 
