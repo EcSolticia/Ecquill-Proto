@@ -1,4 +1,5 @@
 use crate::lines;
+use regex::Regex;
 
 pub enum TokenType {
     REGULAR,
@@ -23,12 +24,32 @@ impl ClassifiedTokens {
     }
 }
 
+pub fn classify_token(text_token: &str) -> TokenType {
+    let bold_re = Regex::new(r"\*\*(.*?)\*\*").unwrap();
+    let italic_re = Regex::new(r"\*(.*?)\*").unwrap();
+    let hyperlink_re = Regex::new(r"[(.*?)]").unwrap();
+
+    if bold_re.is_match(text_token) {
+        return TokenType::BOLD;
+    }
+    if italic_re.is_match(text_token) {
+        return TokenType::ITALIC;
+    }
+    if hyperlink_re.is_match(text_token) {
+        return TokenType::HYPERLINK;
+    }
+    
+    return TokenType::REGULAR;
+}
+
 pub fn classify_tokens(classified_line: &mut lines::Line) {
     let mut text_tokens = classified_line.ltext.split_whitespace();
 
     for text_token in text_tokens {
+
+
         classified_line.ltokens.tokens.push(Token{
-            ttype: TokenType::REGULAR,
+            ttype: classify_token(text_token),
             ttext: text_token.to_string()
         })
     }
