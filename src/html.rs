@@ -1,5 +1,6 @@
 use crate::lines;
 use crate::tokens;
+use regex::Regex;
 
 pub struct ActualHTML {
     pub html: String
@@ -7,6 +8,26 @@ pub struct ActualHTML {
 impl ActualHTML {
     pub fn get_dummy() -> ActualHTML {
         return ActualHTML {html: "".to_string()};
+    }
+}
+
+// no error handling
+fn strip_pmarkdown_formatting(token: &tokens::Token) -> String {
+    match token.ttype {
+        tokens::TokenType::REGULAR => return token.ttext.clone(),
+        tokens::TokenType::ITALIC => {
+            let re = Regex::new(r"\*(.*?)\*").unwrap();
+            return re.captures(&token.ttext).unwrap()[1].to_string();
+        },
+        tokens::TokenType::BOLD => {
+            let re = Regex::new(r"\*\*(.*?)\*\*").unwrap();
+            return re.captures(&token.ttext).unwrap()[1].to_string();
+        },
+        tokens::TokenType::HYPERLINK => {
+            println!("Hyperlink match \"{}\"", token.ttext);
+            let re = Regex::new(r"\[(.*?)\]").unwrap();
+            return re.captures(&token.ttext).unwrap()[1].to_string();
+        }
     }
 }
 
@@ -24,7 +45,7 @@ fn format_token_into_html(token: &tokens::Token) -> String {
         return format!("{} ", token.ttext.clone());
     }
 
-    return format!("<{}>{} </{}>", chosen_tag, token.ttext, chosen_tag);
+    return format!("<{}>{} </{}>", chosen_tag, strip_pmarkdown_formatting(token), chosen_tag);
 }
 
 pub fn produce_html(

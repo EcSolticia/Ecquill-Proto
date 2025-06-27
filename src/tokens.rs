@@ -27,7 +27,7 @@ impl ClassifiedTokens {
 pub fn classify_token(text_token: &str) -> TokenType {
     let bold_re = Regex::new(r"\*\*(.*?)\*\*").unwrap();
     let italic_re = Regex::new(r"\*(.*?)\*").unwrap();
-    let hyperlink_re = Regex::new(r"[(.*?)]").unwrap();
+    let hyperlink_re = Regex::new(r"\[(.*?)\]").unwrap();
 
     if bold_re.is_match(text_token) {
         return TokenType::BOLD;
