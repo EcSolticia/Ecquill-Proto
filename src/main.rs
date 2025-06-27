@@ -16,7 +16,7 @@ fn main() {
     
     let mut actual_html: html::ActualHTML = html::ActualHTML::get_dummy();
 
-    html::produce_html(&classified_lines, &mut actual_html);
+    html::produce_html(&mut classified_lines, &mut actual_html);
 
     println!("{}", actual_html.html);
 }

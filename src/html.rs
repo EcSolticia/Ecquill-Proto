@@ -12,7 +12,7 @@ impl ActualHTML {
 }
 
 // no error handling
-fn strip_pmarkdown_formatting(token: &tokens::Token) -> String {
+fn strip_tokenwise_pmarkdown_formatting(token: &tokens::Token) -> String {
     match token.ttype {
         tokens::TokenType::REGULAR => return token.ttext.clone(),
         tokens::TokenType::ITALIC => {
@@ -31,6 +31,14 @@ fn strip_pmarkdown_formatting(token: &tokens::Token) -> String {
     }
 }
 
+fn strip_linewise_pmarkdown_formatting(line: &lines::Line) -> String {
+    match line.ltype {
+        lines::LineType::H => return format!("<h1>{}</h1>", line.ltext),
+        lines::LineType::P => return format!("<p>{}</p>", line.ltext),
+        lines::LineType::NOTHING => return "".to_string()
+    }
+}
+
 fn format_token_into_html(token: &tokens::Token) -> String {
     let mut chosen_tag: String = "".to_string();
     
@@ -45,35 +53,26 @@ fn format_token_into_html(token: &tokens::Token) -> String {
         return format!("{} ", token.ttext.clone());
     }
 
-    return format!("<{}>{} </{}>", chosen_tag, strip_pmarkdown_formatting(token), chosen_tag);
+    return format!("<{}>{} </{}>", chosen_tag, strip_tokenwise_pmarkdown_formatting(token), chosen_tag);
 }
 
 pub fn produce_html(
-    classified_lines_with_classified_tokens: &lines::ClassifiedLines,
+    classified_lines_with_classified_tokens: &mut lines::ClassifiedLines,
     actual_html: &mut ActualHTML
 ) {
-    for line in &classified_lines_with_classified_tokens.lines {
+    actual_html.html.push_str("<html><body>");
+    for line in &mut classified_lines_with_classified_tokens.lines {
 
-        let mut hline: String = "<html><body>\n".to_string();
-        let mut chosen_tag: String = "".to_string();
-
-        match line.ltype {
-            lines::LineType::H => chosen_tag = "h1".to_string(),
-            lines::LineType::P => chosen_tag = "p".to_string(),
-            lines::LineType::NOTHING => continue
-        }
-
-        hline.push_str(&format!("<{}>", chosen_tag));
+        line.ltext = "".to_string();
 
         for token in &line.ltokens.tokens {
-            hline.push_str(
+            line.ltext.push_str(
                 &format_token_into_html(token)
-            );
+            )
         }
 
-        hline.push_str(&format!("</{}>\n", chosen_tag));
+        actual_html.html.push_str(&strip_linewise_pmarkdown_formatting(line));
 
-        actual_html.html.push_str(&hline);
-        actual_html.html.push_str("</body></html>")
     }
+    actual_html.html.push_str("</html></body>");
 }
