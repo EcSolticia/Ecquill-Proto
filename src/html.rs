@@ -21,10 +21,10 @@ fn format_token_into_html(token: &tokens::Token) -> String {
     }
 
     if chosen_tag == "" {
-        return token.ttext.clone();
+        return format!("{} ", token.ttext.clone());
     }
 
-    return format!("<{}>{}</{}>", chosen_tag, token.ttext, chosen_tag);
+    return format!("<{}>{} </{}>", chosen_tag, token.ttext, chosen_tag);
 }
 
 pub fn produce_html(
@@ -33,7 +33,7 @@ pub fn produce_html(
 ) {
     for line in &classified_lines_with_classified_tokens.lines {
 
-        let mut hline: String = "".to_string();
+        let mut hline: String = "<html><body>\n".to_string();
         let mut chosen_tag: String = "".to_string();
 
         match line.ltype {
@@ -53,5 +53,6 @@ pub fn produce_html(
         hline.push_str(&format!("</{}>\n", chosen_tag));
 
         actual_html.html.push_str(&hline);
+        actual_html.html.push_str("</body></html>")
     }
 }
