@@ -1,70 +1,24 @@
-
-enum LineType {
-    H1,
-    H2,
-    H3,
-    P
-}
-
-struct Line {
-    text: String,
-    line_type: LineType
-}
-
-fn classify_lines(lines: std::str::Split<'_, char>, line_tokens: &mut Vec<Line>) {
-    // iterate over lines
-    for line in lines {
-        let first_char: char = line.chars().nth(0).unwrap();
-        if first_char == '#' {
-            
-            line_tokens.push(
-                Line{
-                    text: line.to_string(),
-                    line_type: LineType::H1
-                }
-            );
-
-        } else {
-
-            line_tokens.push(
-                Line{
-                    text: line.to_string(),
-                    line_type: LineType::P
-                }
-            );
-            
-        }
-    }
-}
-
-fn to_html(line_tokens: &mut Vec<Line>, output: &mut String) {
-    for line in line_tokens {
-
-        match line.line_type {
-
-            LineType::H1 => output.push_str(format!("<h1>{}</h1>", line.text.as_str()[1..].to_string()).as_str()),
-            LineType::H2 => output.push_str(format!("<h2>{}</h2>", line.text.as_str()[2..].to_string()).as_str()),//noimpl
-            LineType::H3 => output.push_str(format!("<h3>{}</h3>", line.text.as_str()[3..].to_string()).as_str()),//noimpl
-            LineType::P => output.push_str(format!("<p>{}</p>", line.text).as_str())
-
-        }
-
-    }
-}
+mod io;
+mod lines;
 
 fn main() {
-    let markdown: String = String::from("# hello\nbye\n# okay?")  ;
+    let input: io::Input = io::Input{
+        pmarkdown: "# Hi\nOk\n# Bye".to_string()
+    };
 
-    let lines: std::str::Split<'_, char> = markdown.split('\n');
-    
-    let mut line_tokens: Vec<Line> = vec![];
+    //let mut output: io::Output;
 
-    classify_lines(lines, &mut line_tokens);
+    let mut classified_lines: lines::ClassifiedLines = lines::ClassifiedLines::get_dummy();
 
-    let mut output: String = "".to_string();
+    lines::classify_lines(&input, &mut classified_lines);
 
-    to_html(&mut line_tokens, &mut output);;
+    for line in classified_lines.lines {
 
-    println!("{}", output);
+        match line.ltype {
+            lines::LineType::H => println!("{}", line.ltext.to_uppercase()),
+            lines::LineType::P => println!("{}", line.ltext.to_lowercase()),
+            lines::LineType::NOTHING => continue
+        }
 
+    } 
 }
