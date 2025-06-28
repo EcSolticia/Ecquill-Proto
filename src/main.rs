@@ -10,13 +10,14 @@ use clap::Parser;
 
 #[derive(Parser)]
 struct Cli {
-    filepath: String
+    input_path: String,
+    output_path: String
 }
 
 fn main() {
     let args = Cli::parse();
 
-    let pmarkdown_from_file: String = fs::read_to_string(args.filepath).unwrap();
+    let pmarkdown_from_file: String = fs::read_to_string(args.input_path).unwrap();
     let input: input::Input = input::Input{
         pmarkdown: pmarkdown_from_file
     };
@@ -31,5 +32,5 @@ fn main() {
 
     html::produce_html(&mut classified_lines, &mut actual_html);
 
-    println!("{}", actual_html.html);
+    fs::write(args.output_path, actual_html.html);
 }
