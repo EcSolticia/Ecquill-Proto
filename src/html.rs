@@ -83,5 +83,5 @@ pub fn produce_html(
         actual_html.html.push_str(&new_line);
 
     }
-    actual_html.html.push_str("</html></body>");
+    actual_html.html.push_str("</body></html>");
 }

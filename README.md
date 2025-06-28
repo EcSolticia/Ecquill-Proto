@@ -21,7 +21,7 @@ This is my custom markdown-to-HTML converter. Have fun!
 ```
 Generate HTML:
 ```bash
-cargo run test_input.md output.html
+nix develop --command cargo run test_input.md output.html
 ```
 Running the above command will generate the `output.html` file with the following contents:
 ```html
@@ -34,7 +34,7 @@ Running the above command will generate the `output.html` file with the followin
 <p></p>
 <p><i>bye! </i></p>
 <p></p>
-</html></body>
+</body></html>
 ```
 This looks like the following:
 
