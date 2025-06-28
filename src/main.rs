@@ -3,9 +3,13 @@ mod lines;
 mod tokens;
 mod html;
 
+use std::fs;
+use std::error::Error;
+
 fn main() {
+    let pmarkdown_from_file: String = fs::read_to_string("./test_input.txt").unwrap();
     let input: input::Input = input::Input{
-        pmarkdown: "# Hi, this is me, okay?\nOk **haha**, *usain* **bolt** or *italic* **bold**?\n sorry, bad joke\n# Bye".to_string()
+        pmarkdown: pmarkdown_from_file
     };
 
     let mut classified_lines: lines::ClassifiedLines = lines::ClassifiedLines::get_dummy();
