@@ -6,8 +6,17 @@ mod html;
 use std::fs;
 use std::error::Error;
 
+use clap::Parser;
+
+#[derive(Parser)]
+struct Cli {
+    filepath: String
+}
+
 fn main() {
-    let pmarkdown_from_file: String = fs::read_to_string("./test_input.txt").unwrap();
+    let args = Cli::parse();
+
+    let pmarkdown_from_file: String = fs::read_to_string(args.filepath).unwrap();
     let input: input::Input = input::Input{
         pmarkdown: pmarkdown_from_file
     };
